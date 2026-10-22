@@ -1,14 +1,16 @@
 <?php
 
+use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-    Route::get('/heure', function () {
+Route::get('/', [PageController::class, 'home']);
+
+Route::get('/a-propos', [PageController::class, 'about']);
+
+Route::get('/heure', function () {
     return view('heure', [
         'heure' => now()->format('H:i'),
-        'date' => now()->format('j/n/Y'),
+        'date' => now()->format('d/m/Y'),
     ]);
 });
 
@@ -28,5 +30,4 @@ Route::get('/bienvenue', function () {
         'groupe' => 'MDW32 g1',
         'cours' => 'Atelier Framework Côté Serveur',
     ]);
-
 });
