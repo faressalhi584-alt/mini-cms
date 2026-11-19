@@ -1,17 +1,20 @@
 <x-layout>
-    <x-slot:title>{{ $post['title'] }} - Mini-CMS</x-slot:title>
+    <x-slot:title>{{ $post->title }} - Mini-CMS</x-slot:title>
 
-    <article>
-        <h1 class="text-3xl font-bold">{{ $post['title'] }}</h1>
-        <p class="mt-2 text-sm text-gray-500">
-            Publié le {{ $post['date'] }} par {{ $post['author'] }}
+    <article class="max-w-2xl">
+        <a href="{{ route('posts.index') }}" class="text-sm text-indigo-600 hover:underline">Retour aux articles</a>
+
+        <h1 class="mt-4 mb-2 text-3xl font-bold">{{ $post->title }}</h1>
+
+        <p class="mb-6 text-sm text-gray-500">
+            @if ($post->published_at)
+                Publié le {{ $post->published_at->format('d/m/Y') }}
+            @else
+                Brouillon
+            @endif
         </p>
 
-        <div class="mt-6 space-y-4 leading-relaxed text-gray-700">
-            @foreach ($post['body'] as $paragraph)
-                <p>{{ $paragraph }}</p>
-            @endforeach
-        </div>
+        <div class="whitespace-pre-line leading-relaxed text-gray-800">{{ $post->body }}</div>
     </article>
 
     <p class="mt-8">

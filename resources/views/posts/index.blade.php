@@ -1,15 +1,20 @@
 <x-layout>
     <x-slot:title>{{ $heading }} - Mini-CMS</x-slot:title>
 
-    <h1 class="text-3xl font-bold">{{ $heading }}</h1>
+    <x-page-header :title="$heading" />
+    <a href="{{ route('posts.create') }}" class="mb-6 inline-block rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">Nouvel article</a>
 
-    @forelse ($posts as $slug => $post)
-        <div class="mt-6">
+    <div class="grid gap-6 md:grid-cols-2">
+        @forelse ($posts as $post)
             <x-post-card :post="$post" />
-        </div>
-    @empty
-        <x-alert type="warning" title="Aucun article" class="mt-6">
-            Aucun article ne correspond à cette sélection.
-        </x-alert>
-    @endforelse
+        @empty
+            <x-alert type="warning" title="Aucun article" class="md:col-span-2">
+                Il n'y a pas encore d'article.
+            </x-alert>
+        @endforelse
+    </div>
+
+    <div class="mt-8">
+        {{ $posts->links() }}
+    </div>
 </x-layout>

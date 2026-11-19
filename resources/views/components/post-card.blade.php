@@ -1,19 +1,23 @@
 @props(['post'])
 
-<article {{ $attributes->merge(['class' => 'rounded border border-gray-200 bg-white p-5']) }}>
-    @if ($post['featured'])
-        <span class="mb-2 inline-block rounded bg-red-100 px-2 py-1 text-xs font-semibold text-red-700">À la une</span>
-    @endif
+<article {{ $attributes->merge(['class' => 'flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-5 shadow-sm']) }}>
+    <div class="flex items-center gap-2">
+        <h2 class="text-lg font-semibold text-gray-900">
+            <a href="{{ route('posts.show', $post) }}" class="hover:text-indigo-600">{{ $post->title }}</a>
+        </h2>
+        @if (! $post->is_published)
+            <span class="rounded-full bg-gray-200 px-2 py-0.5 text-xs font-medium text-gray-700">Brouillon</span>
+        @endif
+    </div>
 
-    <h2 class="text-xl font-semibold">
-        <a href="{{ route('posts.show', $post['slug']) }}" class="text-red-600 hover:underline">
-            {{ $post['title'] }}
-        </a>
-    </h2>
+    <p class="text-sm text-gray-600">{{ Str::limit($post->body, 120) }}</p>
 
-    <p class="mt-2 text-gray-700">{{ $post['excerpt'] }}</p>
-    <p class="mt-3 text-sm text-gray-500">
-        {{ $post['author'] }} ·
-        <a href="{{ route('posts.archive', $post['year']) }}" class="underline">{{ $post['date'] }}</a>
+    <p class="text-xs text-gray-500">
+        @if ($post->published_at)
+            Publié le {{ $post->published_at->format('d/m/Y') }} -
+            <a href="{{ route('posts.archive', $post->published_at->year) }}" class="underline">Archive {{ $post->published_at->year }}</a>
+        @else
+            Non publié
+        @endif
     </p>
 </article>
