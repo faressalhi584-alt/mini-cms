@@ -78,3 +78,9 @@ npm run build
 ![Liste des articles avec leur catégorie, leur auteur et leurs tags](screenshots/s07-liste-relations.png)
 
 ![Page d'un article avec ses tags et les articles de la même catégorie](screenshots/s07-detail-tags.png)
+
+### Session 09
+
+![Message de confirmation après la création d'un article](screenshots/s09-message-flash.png)
+
+![Page personnalisée pour un article introuvable](screenshots/s09-article-introuvable.png)
