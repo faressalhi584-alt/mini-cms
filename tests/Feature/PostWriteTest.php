@@ -30,7 +30,8 @@ it('creates a post from the form', function () {
 
 it('does not create a post without a title', function () {
     $this->post(route('posts.store'), postData(['title' => '']))
-        ->assertRedirect();
+        ->assertRedirect()
+        ->assertSessionHasErrors(['title' => 'Le champ titre est obligatoire.']);
 
     $this->assertDatabaseMissing('posts', ['slug' => 'article-de-test']);
 });

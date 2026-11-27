@@ -16,11 +16,13 @@ function categoryAdminData(array $overrides = []): array
 }
 
 it('lists the categories', function () {
-    Category::factory()->create(['name' => 'Cuisine', 'slug' => 'cuisine']);
+    $category = Category::factory()->create(['name' => 'Cuisine', 'slug' => 'cuisine']);
+    Post::factory()->create(['category_id' => $category->id]);
 
     $this->get(route('admin.categories.index'))
         ->assertOk()
-        ->assertSee('Cuisine');
+        ->assertSee('Cuisine')
+        ->assertSee('1');
 });
 
 it('creates a category and flashes a message', function () {
@@ -56,6 +58,14 @@ it('keeps its own slug on update', function () {
         ->assertSessionHasNoErrors();
 
     $this->assertDatabaseHas('categories', ['id' => $category->id, 'name' => 'Laravel 13']);
+});
+
+it('rejects another category slug on update with the French message', function () {
+    $category = Category::factory()->create(['name' => 'Laravel', 'slug' => 'laravel']);
+    Category::factory()->create(['name' => 'PHP', 'slug' => 'php']);
+
+    $this->put(route('admin.categories.update', $category), categoryAdminData(['slug' => 'php']))
+        ->assertSessionHasErrors(['slug' => 'Ce slug est déjà utilisé par une autre catégorie.']);
 });
 
 it('deletes a category and keeps its posts', function () {
