@@ -19,7 +19,7 @@ Les migrations créent les tables, dont `posts`. Les articles de démonstration 
 ## État actuel (tag lab-04)
 
 - Modèles `Category` et `Tag` reliés à `Post` : un article a une catégorie et un auteur (1:N) et plusieurs tags (N:N, table pivot `post_tag`).
-- Fabriques `PostFactory` (état `published()`), `CategoryFactory`, `TagFactory` et seeders pour un jeu de données réaliste.
+- Fabriques `PostFactory` (état `published()`), `CategoryFactory`, `TagFactory` et seeders pour un jeu de données réaliste en français (`APP_FAKER_LOCALE=fr_FR`).
 - Chargement anticipé avec `with()` ; `Model::preventLazyLoading()` signale tout problème N+1 hors production.
 - Tests Pest : `PostPagesTest`, `PostWriteTest` et `PostRelationsTest`.
 

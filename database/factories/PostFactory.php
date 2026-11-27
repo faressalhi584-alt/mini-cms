@@ -18,13 +18,17 @@ class PostFactory extends Factory
      */
     public function definition(): array
     {
-        $title = rtrim(fake()->unique()->sentence(4), '.');
+        $title = rtrim(fake()->unique()->realTextBetween(30, 60), '.!?');
 
         return [
             'title' => $title,
             'slug' => Str::slug($title),
-            'excerpt' => fake()->optional()->sentence(12),
-            'body' => fake()->paragraphs(3, true),
+            'excerpt' => fake()->optional()->realTextBetween(100, 160),
+            'body' => implode("\n\n", [
+                fake()->realText(300),
+                fake()->realText(300),
+                fake()->realText(300),
+            ]),
             'is_published' => false,
             'published_at' => null,
         ];
