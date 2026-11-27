@@ -16,18 +16,12 @@ composer run dev
 
 Les migrations créent les tables, dont `posts`. Les articles de démonstration sont des données locales et ne sont pas incluses dans le dépôt.
 
-## État actuel (session 09)
+## État actuel (tag lab-05b)
 
-- Modèles `Category` et `Tag` reliés à `Post` : un article a une catégorie et un auteur (1:N) et plusieurs tags (N:N, table pivot `post_tag`).
-- Fabriques `PostFactory` (état `published()`), `CategoryFactory`, `TagFactory` et seeders pour un jeu de données réaliste en français (`APP_FAKER_LOCALE=fr_FR`).
-- Chargement anticipé avec `with()` ; `Model::preventLazyLoading()` signale tout problème N+1 hors production.
-- Tests Pest : `PostPagesTest`, `PostWriteTest`, `PostRelationsTest` et `PostTaxonomyTest`.
-- Formulaires de catégorie et tags, pages filtrées par catégorie ou tag, et compteurs d'articles publiés sur l'accueil.
-- Défi de la session 08 : tags populaires, liens de navigation et tests dans `PostTaxonomyTest`.
-- Validation des créations et modifications dans `StorePostRequest` et `UpdatePostRequest`.
-- Messages de confirmation temporaires pour les actions sur les articles et page 404 personnalisée pour les articles introuvables.
-- Mode lecture seule configurable avec `SITE_READ_ONLY=true` ; les requêtes de lecture restent accessibles et les écritures répondent avec le statut 503.
-- Tests de feedback, de la page 404 et du mode lecture seule dans `PostFeedbackTest`.
+- Back-office des catégories et des tags sous `/admin` (`CategoryController`, `TagController`), protégé par le middleware `writable`, avec Form Requests et messages flash.
+- Messages de validation en français (`lang/fr/validation.php`, `APP_LOCALE=fr`), avec des noms de champs lisibles et des messages propres aux slugs des catégories et des tags.
+- Pages 404 et 503 affichées dans le layout du site ; pages dédiées pour les articles et catégories introuvables.
+- Tests Pest : `PostPagesTest`, `PostWriteTest`, `PostRelationsTest`, `PostTaxonomyTest`, `PostFeedbackTest`, `CategoryAdminTest`, `TagAdminTest` et `ErrorPagesTest`.
 
 ## Données de démonstration
 
@@ -51,6 +45,18 @@ Après un clone, reconstruire la base avec `php artisan migrate:fresh --seed`. A
 | PUT | `/posts/{post}` | `posts.update` | `PostController@update` |
 | DELETE | `/posts/{post}` | `posts.destroy` | `PostController@destroy` |
 | PATCH | `/posts/{post}/publication` | `posts.publication` | `PostController@togglePublication` |
+| GET | `/admin/categories` | `admin.categories.index` | `CategoryController@index` |
+| GET | `/admin/categories/create` | `admin.categories.create` | `CategoryController@create` |
+| POST | `/admin/categories` | `admin.categories.store` | `CategoryController@store` |
+| GET | `/admin/categories/{category}/edit` | `admin.categories.edit` | `CategoryController@edit` |
+| PUT | `/admin/categories/{category}` | `admin.categories.update` | `CategoryController@update` |
+| DELETE | `/admin/categories/{category}` | `admin.categories.destroy` | `CategoryController@destroy` |
+| GET | `/admin/tags` | `admin.tags.index` | `TagController@index` |
+| GET | `/admin/tags/create` | `admin.tags.create` | `TagController@create` |
+| POST | `/admin/tags` | `admin.tags.store` | `TagController@store` |
+| GET | `/admin/tags/{tag}/edit` | `admin.tags.edit` | `TagController@edit` |
+| PUT | `/admin/tags/{tag}` | `admin.tags.update` | `TagController@update` |
+| DELETE | `/admin/tags/{tag}` | `admin.tags.destroy` | `TagController@destroy` |
 
 ## Vérifications
 
@@ -84,3 +90,11 @@ npm run build
 ![Message de confirmation après la création d'un article](screenshots/s09-message-flash.png)
 
 ![Page personnalisée pour un article introuvable](screenshots/s09-article-introuvable.png)
+
+### Session 10
+
+Back-office des catégories et des tags, messages de validation en français, pages 404 et 503 dans le layout du site.
+
+![Formulaire de catégorie envoyé vide, avec les messages de validation en français](screenshots/s10-validation.png)
+
+![Page 404 du site pour une adresse inconnue](screenshots/s10-404.png)
