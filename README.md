@@ -16,16 +16,13 @@ composer run dev
 
 Les migrations créent les tables, dont `posts`. Les articles de démonstration sont des données locales et ne sont pas incluses dans le dépôt.
 
-## État actuel (tag lab-06b)
+## État actuel (tag lab-07)
 
-- Inscription, connexion et déconnexion écrites à la main, avec mots de passe hachés, régénération de session et limitation des tentatives.
-- Le rôle `author` est attribué par défaut ; `fares.salhi@example.com` est administrateur après `php artisan migrate:fresh --seed`.
-- Le middleware `admin` protège toute la zone `/admin` ; les auteurs reçoivent une page 403.
-- Les Gates `manage-categories` et `manage-tags` protègent contrôleurs, Form Requests et menu.
-- Les brouillons ne sont visibles que par leur auteur et les administrateurs ; les articles publiés restent publics.
-- Le défi de gestion des rôles permet aux administrateurs de promouvoir ou rétrograder un autre utilisateur, mais pas de modifier leur propre rôle.
-- `/mes-articles` liste les articles et brouillons de l'utilisateur connecté ; la connexion propose « Se souvenir de moi ».
-- Le README compare l'authentification manuelle au starter kit Livewire.
+- API JSON en lecture seule, installée avec `php artisan install:api` ; Sanctum est installé, les jetons seront activés en Session 14.
+- `GET /api/posts` renvoie les articles publiés, paginés (5 par défaut, `?per_page=` de 1 à 50), avec auteur, catégorie et noms de tags.
+- `GET /api/posts/{post}` renvoie un article publié ; les brouillons répondent 403 et les identifiants inconnus 404, en JSON.
+- `PostResource` et `CategoryResource` contrôlent les données exposées ; le contenu complet apparaît seulement sur la page d'un article.
+- Les pages Web conservent leurs rôles, Gates, Policies et protections d'administration de la Session 12.
 - Tests Pest : `PostPagesTest`, `PostWriteTest`, `PostRelationsTest`, `PostTaxonomyTest`, `PostFeedbackTest`, `CategoryAdminTest`, `TagAdminTest`, `ErrorPagesTest`, `AuthTest`, `AuthorizationTest`, `AdminAccessTest`, `PostVisibilityTest` et `UserRoleTest`.
 
 ## Données de démonstration
@@ -64,6 +61,8 @@ Après un clone, reconstruire la base avec `php artisan migrate:fresh --seed`. A
 | DELETE | `/admin/tags/{tag}` | `admin.tags.destroy` | `TagController@destroy` |
 | GET | `/admin/utilisateurs` | `admin.users.index` | `UserRoleController@index` |
 | PATCH | `/admin/utilisateurs/{user}/role` | `admin.users.role` | `UserRoleController@updateRole` |
+| GET | `/api/posts` | `api.posts.index` | `Api\PostController@index` |
+| GET | `/api/posts/{post}` | `api.posts.show` | `Api\PostController@show` |
 | GET | `/inscription` | `register` | `Auth\RegisterController@create` |
 | POST | `/inscription` | `register.store` | `Auth\RegisterController@store` |
 | GET | `/connexion` | `login` | `Auth\LoginController@create` |
@@ -123,6 +122,14 @@ Back-office des catégories et des tags, messages de validation en français, pa
 ![Page 403 « Réservé aux administrateurs. » pour un compte auteur sur /admin/tags](screenshots/s12-admin-interdit.png)
 
 ![Barre de navigation d'un compte auteur, sans les liens Catégories et Tags](screenshots/s12-menu-auteur.png)
+
+### Session 13
+
+L'API de lecture a été vérifiée avec `curl.exe` et le navigateur : Postman n'est pas installé dans cet environnement.
+
+![Réponse paginée de GET /api/posts?per_page=2 avec les clés data, links et meta](screenshots/s13-api-liste.png)
+
+![Erreur JSON 422 de GET /api/posts?per_page=500 avec le message en français](screenshots/s13-api-422.png)
 
 ## Comparaison avec le starter kit Livewire
 
