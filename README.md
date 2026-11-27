@@ -16,7 +16,7 @@ composer run dev
 
 Les migrations créent les tables, dont `posts`. Les articles de démonstration sont des données locales et ne sont pas incluses dans le dépôt.
 
-## État actuel (session 08)
+## État actuel (session 09)
 
 - Modèles `Category` et `Tag` reliés à `Post` : un article a une catégorie et un auteur (1:N) et plusieurs tags (N:N, table pivot `post_tag`).
 - Fabriques `PostFactory` (état `published()`), `CategoryFactory`, `TagFactory` et seeders pour un jeu de données réaliste en français (`APP_FAKER_LOCALE=fr_FR`).
@@ -24,6 +24,10 @@ Les migrations créent les tables, dont `posts`. Les articles de démonstration 
 - Tests Pest : `PostPagesTest`, `PostWriteTest`, `PostRelationsTest` et `PostTaxonomyTest`.
 - Formulaires de catégorie et tags, pages filtrées par catégorie ou tag, et compteurs d'articles publiés sur l'accueil.
 - Défi de la session 08 : tags populaires, liens de navigation et tests dans `PostTaxonomyTest`.
+- Validation des créations et modifications dans `StorePostRequest` et `UpdatePostRequest`.
+- Messages de confirmation temporaires pour les actions sur les articles et page 404 personnalisée pour les articles introuvables.
+- Mode lecture seule configurable avec `SITE_READ_ONLY=true` ; les requêtes de lecture restent accessibles et les écritures répondent avec le statut 503.
+- Tests de feedback, de la page 404 et du mode lecture seule dans `PostFeedbackTest`.
 
 ## Données de démonstration
 
