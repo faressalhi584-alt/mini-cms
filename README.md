@@ -16,15 +16,17 @@ composer run dev
 
 Les migrations créent les tables, dont `posts`. Les articles de démonstration sont des données locales et ne sont pas incluses dans le dépôt.
 
-## État actuel (tag lab-06)
+## État actuel (tag lab-06b)
 
-- Inscription (`/inscription`), connexion (`/connexion`) et déconnexion écrites à la main, avec mots de passe hachés, régénération de session et limitation des tentatives de connexion.
-- Colonne `role` (`author` par défaut, `admin`) ; après `php artisan migrate:fresh --seed`, `fares.salhi@example.com` est administrateur (mot de passe de démonstration : `password`).
-- Écritures et back-office réservés aux utilisateurs connectés ; chaque nouvel article est attaché à son auteur.
-- Gate `manage-categories` : seuls les administrateurs gèrent les catégories.
-- `PostPolicy` : un auteur gère ses propres articles, un administrateur tous les articles.
-- Défi : `/mes-articles` liste les articles et brouillons de l'utilisateur connecté ; la connexion propose « Se souvenir de moi ».
-- Tests Pest : `PostPagesTest`, `PostWriteTest`, `PostRelationsTest`, `PostTaxonomyTest`, `PostFeedbackTest`, `CategoryAdminTest`, `TagAdminTest`, `ErrorPagesTest`, `AuthTest` et `AuthorizationTest`.
+- Inscription, connexion et déconnexion écrites à la main, avec mots de passe hachés, régénération de session et limitation des tentatives.
+- Le rôle `author` est attribué par défaut ; `fares.salhi@example.com` est administrateur après `php artisan migrate:fresh --seed`.
+- Le middleware `admin` protège toute la zone `/admin` ; les auteurs reçoivent une page 403.
+- Les Gates `manage-categories` et `manage-tags` protègent contrôleurs, Form Requests et menu.
+- Les brouillons ne sont visibles que par leur auteur et les administrateurs ; les articles publiés restent publics.
+- Le défi de gestion des rôles permet aux administrateurs de promouvoir ou rétrograder un autre utilisateur, mais pas de modifier leur propre rôle.
+- `/mes-articles` liste les articles et brouillons de l'utilisateur connecté ; la connexion propose « Se souvenir de moi ».
+- Le README compare l'authentification manuelle au starter kit Livewire.
+- Tests Pest : `PostPagesTest`, `PostWriteTest`, `PostRelationsTest`, `PostTaxonomyTest`, `PostFeedbackTest`, `CategoryAdminTest`, `TagAdminTest`, `ErrorPagesTest`, `AuthTest`, `AuthorizationTest`, `AdminAccessTest`, `PostVisibilityTest` et `UserRoleTest`.
 
 ## Données de démonstration
 
@@ -60,6 +62,8 @@ Après un clone, reconstruire la base avec `php artisan migrate:fresh --seed`. A
 | GET | `/admin/tags/{tag}/edit` | `admin.tags.edit` | `TagController@edit` |
 | PUT | `/admin/tags/{tag}` | `admin.tags.update` | `TagController@update` |
 | DELETE | `/admin/tags/{tag}` | `admin.tags.destroy` | `TagController@destroy` |
+| GET | `/admin/utilisateurs` | `admin.users.index` | `UserRoleController@index` |
+| PATCH | `/admin/utilisateurs/{user}/role` | `admin.users.role` | `UserRoleController@updateRole` |
 | GET | `/inscription` | `register` | `Auth\RegisterController@create` |
 | POST | `/inscription` | `register.store` | `Auth\RegisterController@store` |
 | GET | `/connexion` | `login` | `Auth\LoginController@create` |
@@ -113,3 +117,26 @@ Back-office des catégories et des tags, messages de validation en français, pa
 ![Barre de navigation d'un utilisateur connecté, avec le message « Vous êtes connecté. »](screenshots/s11-connexion.png)
 
 ![Page 403 quand un auteur ouvre la modification de l'article d'un autre auteur](screenshots/s11-interdit.png)
+
+### Session 12
+
+![Page 403 « Réservé aux administrateurs. » pour un compte auteur sur /admin/tags](screenshots/s12-admin-interdit.png)
+
+![Barre de navigation d'un compte auteur, sans les liens Catégories et Tags](screenshots/s12-menu-auteur.png)
+
+## Comparaison avec le starter kit Livewire
+
+| Critère | Mini-CMS (authentification manuelle) | Starter kit Livewire |
+|---|---|---|
+| Routes d'authentification | Déclarées dans `routes/web.php` | Enregistrées par Fortify |
+| Inscription | `RegisterController`, `RegisterRequest` et vue Blade | Action `CreateNewUser` et formulaire Livewire |
+| Connexion | `LoginController` et `LoginRequest` | Fortify et vue Livewire |
+| Déconnexion | Le contrôleur invalide la session et régénère le jeton CSRF | Action Livewire dédiée |
+| Limitation des tentatives | Cinq essais par minute, selon l'e-mail et l'adresse IP | Fournie par Fortify |
+| Mot de passe oublié | Absent | Fonctionnalité de réinitialisation activée |
+| Vérification de l'e-mail | Absente | Fonctionnalité, contrat `MustVerifyEmail` et middleware `verified` |
+| Double authentification | Absente | Double authentification et passkeys disponibles |
+| Rôles et autorisations | Rôles, Gates, `PostPolicy` et middleware `admin` écrits pour le projet | À définir pour les besoins de l'application |
+| Tests | Tests Pest pour l'authentification, les rôles et les autorisations | Tests fournis par le kit, écrits avec PHPUnit |
+
+Dans un vrai projet, je garderais Fortify et le starter kit pour les fonctions d'authentification éprouvées, comme la réinitialisation des mots de passe et la vérification des e-mails. Je conserverais les Gates, les Policies et les règles de rôle propres à l'application, car le kit ne les définit pas à notre place.
