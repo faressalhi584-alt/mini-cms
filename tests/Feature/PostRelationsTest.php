@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 
 beforeEach(function () {
     $this->withoutVite();
+    $this->actingAs(User::factory()->admin()->create());
 });
 
 it('lists posts with their category, author and tags without lazy loading', function () {

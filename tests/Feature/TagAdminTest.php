@@ -2,9 +2,11 @@
 
 use App\Models\Post;
 use App\Models\Tag;
+use App\Models\User;
 
 beforeEach(function () {
     $this->withoutVite();
+    $this->actingAs(User::factory()->admin()->create());
 });
 
 function tagAdminData(array $overrides = []): array
