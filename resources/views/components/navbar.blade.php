@@ -7,6 +7,12 @@
     @can('manage-categories')
         <x-nav-link href="{{ route('admin.categories.index') }}" :active="request()->routeIs('admin.categories.*')">Catégories</x-nav-link>
     @endcan
+    @can('manage-tags')
+        <x-nav-link href="{{ route('admin.tags.index') }}" :active="request()->routeIs('admin.tags.*')">Tags</x-nav-link>
+    @endcan
+    @can('viewAny', App\Models\User::class)
+        <x-nav-link href="{{ route('admin.users.index') }}" :active="request()->routeIs('admin.users.*')">Utilisateurs</x-nav-link>
+    @endcan
 
     @auth
         <x-nav-link href="{{ route('my-posts') }}" :active="request()->routeIs('my-posts')">Mes articles</x-nav-link>
