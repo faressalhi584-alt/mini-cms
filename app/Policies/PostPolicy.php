@@ -18,9 +18,13 @@ class PostPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Post $post): bool
+    public function view(?User $user, Post $post): bool
     {
-        return false;
+        if ($post->is_published) {
+            return true;
+        }
+
+        return $user !== null && $this->update($user, $post);
     }
 
     /**
@@ -28,7 +32,7 @@ class PostPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -36,7 +40,7 @@ class PostPolicy
      */
     public function update(User $user, Post $post): bool
     {
-        return $user->isAdmin() || $user->id === $post->user_id;
+        return $user->id === $post->user_id;
     }
 
     /**
