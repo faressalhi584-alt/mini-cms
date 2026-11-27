@@ -16,14 +16,12 @@ composer run dev
 
 Les migrations créent les tables, dont `posts`. Les articles de démonstration sont des données locales et ne sont pas incluses dans le dépôt.
 
-## État actuel (tag lab-03)
+## État actuel (tag lab-03b)
 
-- Articles enregistrés dans SQLite et lus avec le modèle Eloquent `Post`.
-- La table `posts` est créée par une migration ; après un clone, `php artisan migrate` la recrée vide.
-- Liste paginée de quatre articles, détail par liaison modèle-route et archive par année.
-- Formulaire de création avec validation côté serveur.
-- Les trois derniers articles publiés s'affichent sur l'accueil.
-- Tests Pest exécutables avec `php artisan test`.
+- CRUD complet des articles : liste, détail, création, modification, suppression avec confirmation.
+- Colonne `excerpt` ajoutée par une nouvelle migration.
+- Scope `published` utilisé sur l'accueil et l'archive.
+- Tests Pest des lectures (`PostPagesTest`) et des écritures (`PostWriteTest`) : `php artisan test`.
 
 ## Routes disponibles
 
@@ -37,6 +35,10 @@ Les migrations créent les tables, dont `posts`. Les articles de démonstration 
 | GET | `/posts/create` | `posts.create` | `PostController@create` |
 | POST | `/posts` | `posts.store` | `PostController@store` |
 | GET | `/posts/{post}` | `posts.show` | `PostController@show` |
+| GET | `/posts/{post}/edit` | `posts.edit` | `PostController@edit` |
+| PUT | `/posts/{post}` | `posts.update` | `PostController@update` |
+| DELETE | `/posts/{post}` | `posts.destroy` | `PostController@destroy` |
+| PATCH | `/posts/{post}/publication` | `posts.publication` | `PostController@togglePublication` |
 
 ## Vérifications
 
@@ -52,3 +54,9 @@ npm run build
 ![Liste paginée des articles](screenshots/s05-articles.png)
 
 ![Formulaire avec erreurs de validation](screenshots/s05-formulaire.png)
+
+### Session 06
+
+![Formulaire de modification prérempli](screenshots/s06-modification.png)
+
+![Confirmation de suppression](screenshots/s06-suppression.png)
