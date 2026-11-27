@@ -27,6 +27,7 @@ return [
 
     'attributes' => [
         'body' => 'contenu',
+        'category' => 'catégorie',
         'category_id' => 'catégorie',
         'email' => 'adresse e-mail',
         'excerpt' => 'extrait',
@@ -36,6 +37,7 @@ return [
         'per_page' => 'nombre par page',
         'role' => 'rôle',
         'slug' => 'slug',
+        'tag' => 'tag',
         'tags' => 'tags',
         'tags.*' => 'tag',
         'title' => 'titre',

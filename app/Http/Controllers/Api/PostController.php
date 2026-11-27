@@ -16,12 +16,23 @@ class PostController extends Controller
         $perPage = (int) ($request->validated('per_page') ?? 5);
 
         $posts = Post::published()
-            ->with('user', 'category', 'tags')
-            ->latest('id')
-            ->paginate($perPage)
-            ->withQueryString();
+            ->with('user', 'category', 'tags');
 
-        return PostResource::collection($posts);
+        $category = $request->validated('category');
+
+        if (is_string($category)) {
+            $posts->whereRelation('category', 'slug', $category);
+        }
+
+        $tag = $request->validated('tag');
+
+        if (is_string($tag)) {
+            $posts->whereRelation('tags', 'slug', $tag);
+        }
+
+        $paginatedPosts = $posts->latest('id')->paginate($perPage)->withQueryString();
+
+        return PostResource::collection($paginatedPosts);
     }
 
     public function show(Post $post): PostResource
