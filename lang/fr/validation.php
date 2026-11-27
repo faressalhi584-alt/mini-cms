@@ -33,6 +33,7 @@ return [
         'is_published' => 'publication',
         'name' => 'nom',
         'password' => 'mot de passe',
+        'per_page' => 'nombre par page',
         'role' => 'rôle',
         'slug' => 'slug',
         'tags' => 'tags',
