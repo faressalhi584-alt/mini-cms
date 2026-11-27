@@ -16,14 +16,14 @@ composer run dev
 
 Les migrations créent les tables, dont `posts`. Les articles de démonstration sont des données locales et ne sont pas incluses dans le dépôt.
 
-## État actuel (tag lab-07)
+## État actuel (tag lab-08)
 
-- API JSON en lecture seule, installée avec `php artisan install:api` ; Sanctum est installé, les jetons seront activés en Session 14.
-- `GET /api/posts` renvoie les articles publiés, paginés (5 par défaut, `?per_page=` de 1 à 50), avec auteur, catégorie et noms de tags.
-- `GET /api/posts/{post}` renvoie un article publié ; les brouillons répondent 403 et les identifiants inconnus 404, en JSON.
-- `PostResource` et `CategoryResource` contrôlent les données exposées ; le contenu complet apparaît seulement sur la page d'un article.
-- Les pages Web conservent leurs rôles, Gates, Policies et protections d'administration de la Session 12.
-- Tests Pest : `PostPagesTest`, `PostWriteTest`, `PostRelationsTest`, `PostTaxonomyTest`, `PostFeedbackTest`, `CategoryAdminTest`, `TagAdminTest`, `ErrorPagesTest`, `AuthTest`, `AuthorizationTest`, `AdminAccessTest`, `PostVisibilityTest` et `UserRoleTest`.
+- API de lecture avec articles publiés, filtres par catégorie et tag, ressources JSON et catégories avec nombre d'articles publiés.
+- `/api/login` émet un jeton Bearer ; `/api/logout` révoque le jeton de la requête.
+- `/api/posts` accepte les lectures publiques ; ses opérations POST, PUT et DELETE exigent un jeton Sanctum.
+- Les écritures de l'API réutilisent les Form Requests, l'attribution auteur, et la `PostPolicy` du site.
+- Tests Pest pour les réponses JSON, filtres, erreurs 401/403/404/422, jetons et écritures.
+- Le site conserve les contrôles d'accès, rôles, administration, gestion des brouillons et pages de Session 12.
 
 ## Données de démonstration
 
@@ -61,8 +61,15 @@ Après un clone, reconstruire la base avec `php artisan migrate:fresh --seed`. A
 | DELETE | `/admin/tags/{tag}` | `admin.tags.destroy` | `TagController@destroy` |
 | GET | `/admin/utilisateurs` | `admin.users.index` | `UserRoleController@index` |
 | PATCH | `/admin/utilisateurs/{user}/role` | `admin.users.role` | `UserRoleController@updateRole` |
+| GET | `/api/categories` | `api.categories.index` | `Api\CategoryController@index` |
+| GET | `/api/categories/{category}` | `api.categories.show` | `Api\CategoryController@show` |
 | GET | `/api/posts` | `api.posts.index` | `Api\PostController@index` |
 | GET | `/api/posts/{post}` | `api.posts.show` | `Api\PostController@show` |
+| POST | `/api/login` | `api.login` | `Api\AuthController@login` |
+| POST | `/api/logout` | `api.logout` | `Api\AuthController@logout` |
+| POST | `/api/posts` | `api.posts.store` | `Api\PostController@store` |
+| PUT/PATCH | `/api/posts/{post}` | `api.posts.update` | `Api\PostController@update` |
+| DELETE | `/api/posts/{post}` | `api.posts.destroy` | `Api\PostController@destroy` |
 | GET | `/inscription` | `register` | `Auth\RegisterController@create` |
 | POST | `/inscription` | `register.store` | `Auth\RegisterController@store` |
 | GET | `/connexion` | `login` | `Auth\LoginController@create` |
