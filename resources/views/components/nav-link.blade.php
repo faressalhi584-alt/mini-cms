@@ -6,6 +6,6 @@
         : 'text-gray-600 hover:text-gray-900';
 @endphp
 
-<a href="{{ $href }}" {{ $attributes->merge(['class' => 'px-1 py-4 '.$classes]) }}>
+<a href="{{ $href }}" {{ $attributes->merge(['class' => 'whitespace-nowrap px-1 py-4 '.$classes]) }}>
     {{ $slot }}
 </a>
